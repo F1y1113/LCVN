@@ -1,0 +1,5 @@
+_target_: lcvn_ac.behavior_models.auxiliary_loss_networks.proj_vis_lang.ProjVisLang
+im_dim: ${behavior_model.plan_recognition.fc_hidden_size}
+lang_dim: 32
+output_dim: 64
+proj_lang: true

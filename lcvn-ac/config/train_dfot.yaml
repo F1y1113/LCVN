@@ -1,0 +1,93 @@
+defaults:
+  - setup
+  - callbacks: ag_default
+  - datamodule: lcvn
+  - behavior_model: lumos-ac
+  - trainer: ag_default
+  - logger: none  # disable logger to avoid permission issues
+  - _self_
+
+  - override behavior_model/distribution: continuous
+  - override hydra/job_logging: default
+  - override hydra/hydra_logging: default
+
+script: agent
+
+# DFoT training config
+behavior_model:
+  lcvn_worldmodel:
+    enabled: true
+    # Default to provided weight paths (override via env/CLI as needed)
+    dfot_checkpoint_path: ../outputs/social_dit_xl.ckpt
+    dfot_vae_checkpoint_path: ../outputs/vae.ckpt
+  # DFoT pure inference mode (enable NWM in lumos.yaml if needed)
+  # Diffusion sampling steps (for paths requiring diffusion; adjust as needed)
+  # horizon: 15
+  nwm_diffusion_steps: 50
+  predict_diffusion_steps: 50
+  # GT rollout pre-training: use real next states instead of DFoT for the first N epochs.
+  # After gt_rollout_epochs, automatically switch to DFoT-based RL.
+  # Set to 0 to disable (pure DFoT from epoch 0).
+  gt_rollout_epochs: 20
+
+# Trainer config
+trainer:
+  max_epochs: 100
+  max_steps: -1
+  limit_train_batches: 1.0
+  limit_val_batches: 0        # disable validation
+  check_val_every_n_epoch: 0  # no epoch validation
+  log_every_n_steps: 20
+  # precision: 16
+  precision: "bf16"
+  enable_progress_bar: true
+  num_sanity_val_steps: 0     # disable initial sanity validation
+  devices: 4                  # use 4 GPUs
+  strategy: ddp
+
+
+# Datamodule config
+datamodule:
+  batch_size: 16 # 16 for stable training and resource control
+  num_workers: 8  # 8 workers per GPU; reduce to 4 if CPU constrained
+  pin_memory: false  # keep false to match DataLoader code and avoid confusion
+  root_data_dir: ${oc.env:PWD}/../lcvn-wm/data/lcvn
+
+# Callbacks (disable metric-based saving; keep last)
+callbacks:
+  checkpoint:
+    monitor: null
+    mode: "min"
+    save_top_k: -1
+    save_last: true
+    every_n_epochs: 1
+    filename: 'epoch={epoch}'
+    every_n_train_steps: null
+    save_on_train_epoch_end: true
+
+# # Logging config
+# logger:
+#   wandb:
+#     project: "lcvn-ac_dfot_training"
+#     name: "dfot_experiment_${now:%Y%m%d_%H%M%S}"
+#     tags: ["dfot", "lcvn-ac", "training"]
+
+# Hydra config
+hydra:
+  run:
+    dir: ${log_dir}/dfot_training/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: ${log_dir}/dfot_training/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.override_dirname}
+  job:
+    config:
+      override_dirname:
+        exclude_keys:
+          - log_dir
+          - datamodule.root_data_dir
+
+# Experiment config
+seed: 42
+exp_name: "lumos-ac_dfot_training"
+resume: true
+ckpt_path: null

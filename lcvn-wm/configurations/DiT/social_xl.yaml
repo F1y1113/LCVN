@@ -1,0 +1,20 @@
+dataset: lcvn
+algorithm: dfot_video_social
+experiment: video_generation
+
+name: LcvnWM_Social_DiT_XL
+
+algorithm:
+  backbone:
+    depth: 28
+    hidden_size: 1152
+    num_heads: 16
+  mlp_encoder:
+    output_dim: 1152
+    linear_hidden_dim: 1144
+    angular_hidden_dim: 1144
+    dt_hidden_dim: 8
+
+experiment:
+  training:
+    batch_size: 20

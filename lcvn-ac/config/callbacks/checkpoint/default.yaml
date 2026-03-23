@@ -1,0 +1,10 @@
+_target_: pytorch_lightning.callbacks.ModelCheckpoint
+dirpath: model_weights
+filename: '{epoch}'
+save_last: True
+save_top_k: 0
+every_n_train_steps: null
+every_n_epochs: 1
+monitor: null
+mode: 'min'
+verbose: False

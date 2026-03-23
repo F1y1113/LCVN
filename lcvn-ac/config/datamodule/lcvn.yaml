@@ -1,0 +1,19 @@
+defaults:
+  - datasets: vision_lang_social
+  - transforms: none
+  - proprioception_dims: robot_full
+  - observation_space: havln_lang_rgb_rel
+  - batch_sampler: none
+
+_target_: lcvn_ac.datasets.lcvn_data_module.LcvnDataModule
+_recursive_: false
+root_data_dir: ${oc.env:PWD}/lcvn-wm/data/lcvn
+action_space: 4
+action_max: [0.25, 0.25, 0.1, 0.27]
+action_min: [-0.25, -0.25, -0.1, -0.27]
+shuffle_val: false
+load_feats: true
+
+batch_size: 1024
+seq_len: 10
+min_window_size: 1

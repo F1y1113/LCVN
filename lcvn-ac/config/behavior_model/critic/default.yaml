@@ -1,0 +1,8 @@
+_target_: lcvn_ac.behavior_models.actor_critic.critic.Critic
+perceptual_features: 4096
+latent_goal_features: 32
+plan_features: ???
+hidden_dim: 1024
+layers: 8
+layer_norm: true
+activation: elu

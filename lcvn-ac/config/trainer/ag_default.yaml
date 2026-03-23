@@ -1,0 +1,11 @@
+accelerator: gpu
+devices: 1
+num_nodes: 1
+precision: 32
+max_epochs: 100
+max_steps: null
+log_every_n_steps: 10
+val_check_interval: 0.0
+deterministic: True
+check_val_every_n_epoch: 0
+num_sanity_val_steps: 0

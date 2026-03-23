@@ -1,0 +1,6 @@
+name: lcvn
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip

@@ -1,0 +1,12 @@
+from huggingface_hub import hf_hub_download
+
+
+def download_from_hf(
+    filename: str,
+) -> str:
+    """Download a file from the model hub."""
+    return hf_hub_download(
+        repo_id="kiwhansong/DFoT",
+        cache_dir="./huggingface",
+        filename=filename,
+    )

@@ -1,0 +1,4 @@
+defaults:
+  - checkpoint: default
+  - epoch_progress: default
+  - progress: default

@@ -1,0 +1,32 @@
+defaults:
+  - perceptual_encoder: default
+  - plan_proposal: default
+  - plan_recognition: transformers
+  - distribution: continuous
+  - visual_goal: default
+  - language_goal: default
+  - action_decoder: gaussian
+  - critic: default
+  - loss: default
+  - actor_optimizer: adam
+  - critic_optimizer: adamw
+  - proj_vis_lang: default
+
+_target_: lcvn_ac.behavior_models.lumos.LUMOS
+_recursive_: false
+seq_len: ${datamodule.datasets.vision_dataset.max_window_size}
+name: lumos-ac
+replan_freq: 30
+use_clip_auxiliary_loss: true
+use_bc_loss: true
+gripper_control: false
+temperature: 1.0
+
+lcvn_worldmodel:
+  enabled: true
+  dfot_checkpoint_path: ${oc.env:DFOT_WEIGHTS_PT,${oc.env:DFOT_CKPT,${oc.env:PWD}/lcvn/weights/dfot/dfot_last_2025-11-19.ckpt}}
+  dfot_vae_checkpoint_path: ${oc.env:DFOT_VAE_CKPT,${oc.env:PWD}/lcvn/weights/vae/vae_epoch3_step50000.ckpt}
+
+# Diffusion sampling steps
+nwm_diffusion_steps: 6
+predict_diffusion_steps: 10

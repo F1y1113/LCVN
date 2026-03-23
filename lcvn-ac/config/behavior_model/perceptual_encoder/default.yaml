@@ -1,0 +1,5 @@
+_target_: lcvn_ac.behavior_models.perceptual_encoders.code_encoder.CodeNetwork
+activation_function: ReLU #ELU
+dropout_vis_fc: 0.0
+visual_features: 128
+latent_dim_flat: 4096

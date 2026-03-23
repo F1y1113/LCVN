@@ -1,0 +1,11 @@
+_target_: lcvn_ac.behavior_models.decoders.gaussian_decoder.GaussianDecoder
+perceptual_features: 4096
+latent_goal_features: 32
+plan_features: ???
+hidden_size: 256
+layers: 8
+layer_norm: true
+activation: elu
+out_features: ${datamodule.action_space}
+log_std_min: -5.0
+log_std_max: 2.0

@@ -1,0 +1,6 @@
+_target_: lcvn_ac.behavior_models.plan_encoders.plan_proposal_net.PlanProposalNetwork
+perceptual_features: ???
+latent_goal_features: 32
+plan_features: ???
+activation_function: ReLU #ELU
+hidden_size: 2048

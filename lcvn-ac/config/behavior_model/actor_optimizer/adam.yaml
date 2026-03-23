@@ -1,0 +1,2 @@
+_target_: torch.optim.Adam
+lr: 2e-4

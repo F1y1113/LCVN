@@ -1,0 +1,12 @@
+torchrun --nproc_per_node={GPU_NUM_PER_NODE} train.py \
+    --model anole \
+    --data lcvn \
+    --data_dir ../data \
+    --decoder_type anole \
+    --image_seq_length 784 \
+    --input_format anole \
+    --output outputs/ \
+    --note {experiment_note} \
+    --report_to none \
+    --do_train \
+    --bfloat16

@@ -1,0 +1,3 @@
+_target_: lcvn_ac.utils.callbacks.EpochProgressLogger
+dirpath: ${exp_dir}/train_progress
+filename: epoch_progress.log

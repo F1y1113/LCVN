@@ -1,0 +1,27 @@
+defaults:
+  - dfot_video
+
+_name: ldit_video_social
+
+external_cond_dim: 4
+external_cond_processing: null
+
+mlp_encoder:
+  linear_hidden_dim: 1144
+  angular_hidden_dim: 1144
+  dt_hidden_dim: 8
+  output_dim: 1152
+
+# VAE checkpoint (used for both training and test)
+vae:
+  pretrained_path: "../outputs/vae.ckpt"
+
+# Language conditioning via LDiT cross-attention (disabled by default for backward compatibility)
+use_language: false
+language_layers: [7, 14, 21]  # which DiT layers become LDiT blocks with cross-attention (for 28-layer DiT-XL)
+clip_model: "openai/clip-vit-base-patch32"
+
+# Inference: use full context window
+tasks:
+  prediction:
+    sliding_context_len: -1

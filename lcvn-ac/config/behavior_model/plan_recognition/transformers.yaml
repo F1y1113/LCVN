@@ -1,0 +1,13 @@
+_target_: lcvn_ac.behavior_models.plan_encoders.plan_recognition_net.PlanRecognitionTransformersNetwork
+num_heads: 8
+num_layers: 2
+encoder_hidden_size: 2048
+fc_hidden_size: 4096
+in_features: ??
+plan_features: ???
+action_space: ${datamodule.action_space}
+dropout_p: 0.1
+encoder_normalize: false
+positional_normalize: false
+position_embedding: true
+max_position_embeddings: ${datamodule.datasets.lang_dataset.max_window_size}

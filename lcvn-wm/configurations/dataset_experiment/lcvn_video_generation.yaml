@@ -1,0 +1,24 @@
+# Auto-loaded when dataset=lcvn and experiment=video_generation.
+# Contains DiT-XL architecture defaults and batch sizes for LCVN social dataset.
+
+algorithm:
+  backbone:
+    depth: 28
+    hidden_size: 1152
+    num_heads: 16
+  mlp_encoder:
+    output_dim: 1152
+    linear_hidden_dim: 1144
+    angular_hidden_dim: 1144
+    dt_hidden_dim: 8
+
+wandb:
+  project: lcvn-social
+
+experiment:
+  training:
+    batch_size: 12
+  validation:
+    batch_size: 8
+  test:
+    batch_size: 4

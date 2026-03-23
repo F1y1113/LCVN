@@ -1,0 +1,33 @@
+defaults:
+  - base_video
+
+# Dataset paths
+save_dir: ${oc.env:PWD}/data/lcvn
+suffix: "latent"
+# Latent configuration
+latent:
+  enable: true
+  suffix: "latent"  # File naming: {scene}_{trajectory_id}_latent.pt
+  downsampling_factor: [1, 1]
+
+# Latent standardization parameters (computed from training set)
+data_mean: [[ [ -0.0789 ]], [[ -0.4896 ]], [[ -0.4124 ]], [[ 0.3865 ]] ]
+data_std: [[ [ 3.7900 ]], [[ 12.4186 ]], [[ 6.9311 ]], [[ 5.6708 ]] ]
+# Condition configuration
+external_cond_dim: 4  # [dx, dy, dyaw, dt]
+external_cond_stack: false
+
+# Video configuration
+resolution: 256  # Original video resolution
+observation_shape: [4, 32, 32]  # Latent shape: [channels, height, width]
+n_frames: 5  # Window size: 4 context + 1 prediction
+context_length: 4  # Number of context frames
+frame_skip: 1  # No frame skipping
+max_frames: 5 
+
+# Resumable dataloader configuration
+subdataset_size: 8502  #
+
+# Dataloader settings
+num_workers: 4
+prefetch_factor: 2

@@ -1,0 +1,25 @@
+# @package _global_
+
+dataset:
+  resolution: 256
+  latent:
+    enable: false
+  vae_training: true
+  max_frames: 2
+  frame_skip: 1
+  context_length: 0
+  external_cond_dim: 0
+  subdataset_size: null
+
+experiment:
+  training:
+    batch_size: 8
+    max_steps: 50000
+    data:
+      num_workers: 4
+      shuffle: false
+  validation:
+    batch_size: 8
+    data:
+      num_workers: 4
+  reload_dataloaders_every_n_epochs: 0

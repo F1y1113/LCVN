@@ -1,0 +1,11 @@
+lambda_gae: 0.95
+gamma: 0.995
+rho: 0.0
+eta: 0.0 
+grad_clip: 100
+target_update_interval: 100
+kl_beta: 0.1
+kl_balancing_mix: 0.8
+clip_auxiliary_loss_beta: 3.0
+bc_alpha: 0.2
+actor_alpha: 1.0

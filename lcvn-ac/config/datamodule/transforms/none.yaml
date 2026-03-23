@@ -1,0 +1,24 @@
+train:
+  robot_obs:
+  - _target_: lcvn_ac.utils.transforms.NormalizeVector
+  scene_obs:
+  - _target_: lcvn_ac.utils.transforms.NormalizeVector
+
+
+val:
+  rgb_static:
+  - _target_: lcvn_ac.utils.transforms.ScaleImageTensor
+  - _target_: torchvision.transforms.Normalize
+    mean: [0.5]
+    std: [0.5]
+
+  rgb_gripper:
+  - _target_: lcvn_ac.utils.transforms.ScaleImageTensor
+  - _target_: torchvision.transforms.Normalize
+    mean: [0.5]
+    std: [0.5]
+
+  robot_obs:
+  - _target_: lcvn_ac.utils.transforms.NormalizeVector
+  scene_obs:
+  - _target_: lcvn_ac.utils.transforms.NormalizeVector

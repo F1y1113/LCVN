@@ -1,0 +1,11 @@
+seed: 42
+slurm: false
+device: cuda
+
+root: ${oc.env:PWD}
+log_dir: ${root}/logs
+exp_dir: null
+ag_chk_dir: ${root}/logs/runs/2025-05-03/04-31-52/model_weights/last.ckpt
+
+developer: "nematoli"
+comment: ""

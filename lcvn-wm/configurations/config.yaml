@@ -1,0 +1,24 @@
+# configuration parsing starts here
+defaults:
+  - experiment: video_generation # experiment yaml file name in configurations/experiments folder
+  - dataset: lcvn # dataset yaml file name in configurations/dataset folder
+  - algorithm: dfot_video_social # algorithm yaml file name in configurations/algorithm folder
+  - optional dataset_experiment: ${dataset}_${experiment} # optional yaml file in configurations/dataset_experiment folder, overrides algorithm and experiment configurations that are dataset and experiment dependent
+  - cluster: null # optional, cluster yaml file name in configurations/cluster folder. Leave null for local compute
+
+debug: false # global debug flag will be passed into configuration of experiment, dataset and algorithm
+
+wandb:
+  entity: null # set your wandb entity here
+  project: dfot # wandb project name; if not provided, defaults to root folder name
+  mode: online # 
+
+resume: null # wandb run id to resume logging and loading checkpoint from
+load: null # wandb run id containing checkpoint or a path to a checkpoint file
+
+hydra:
+  run:
+    dir: ${oc.env:PWD}/lcvn-wm/outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: ${oc.env:PWD}/lcvn-wm/outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.override_dirname}
