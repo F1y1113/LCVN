@@ -19,8 +19,8 @@
   </p>
 
 <p align="center">
-  <a href="" target="_blank">
-    <img src="https://img.shields.io/badge/ArXiv-Coming Soon-red">
+  <a href="https://arxiv.org/abs/2603.26741" target="_blank">
+    <img src="https://img.shields.io/badge/ArXiv-2603.26741-red">
   </a>
   <a href="https://github.com/F1y1113/LCVN" target="_blank">
     <img src="https://img.shields.io/badge/Project-LCVN-blue">
