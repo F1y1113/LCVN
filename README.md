@@ -261,10 +261,14 @@ bash eval.sh
 If you find this work useful, please consider citing:
 
 ```bibtex
-@article{dong2026lcvn,
-  title={Language-Conditioned World Modeling for Visual Navigation},
-  author={Dong, Yifei and Wu, Fengyi and Dai, Yilong and Kong, Lingdong and Chen, Guangyu and Zhu, Xu and Hu, Qiyu and Wang, Tianyu and Garnica, Johnalbert and Liu, Feng and Huang, Siyu and Dai, Qi and Cheng, Zhi-Qi},
-  year={2026}
+@misc{dong2026languageconditionedworldmodelingvisual,
+      title={Language-Conditioned World Modeling for Visual Navigation}, 
+      author={Yifei Dong and Fengyi Wu and Yilong Dai and Lingdong Kong and Guangyu Chen and Xu Zhu and Qiyu Hu and Tianyu Wang and Johnalbert Garnica and Feng Liu and Siyu Huang and Qi Dai and Zhi-Qi Cheng},
+      year={2026},
+      eprint={2603.26741},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2603.26741}, 
 }
 ```
 
