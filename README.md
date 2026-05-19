@@ -54,27 +54,50 @@
 
 ### Data Preparation
 
-We now release a partial dataset for the purpose of debugging and demonstrating the data format. You can find them in [data_samples](data_samples/).
+We host the LCVN dataset on Hugging Face: [fly1113/LCVN](https://huggingface.co/datasets/fly1113/LCVN).
 
-To set up the dataset, you can run the following commands to unzip the samples and move them to the expected directory:
+LCVN is a language-conditioned visual navigation dataset for open-loop trajectory generation. Given an initial egocentric observation and a natural language instruction, the agent is required to generate the future navigation trajectory without intermediate environmental feedback.
+
+The full LCVN benchmark contains 39,016 trajectories and 117,048 human-verified instructions. Each trajectory is annotated with three instruction styles:
+
+- **Concise**: short instructions containing essential directional cues.
+- **Intricate**: detailed instructions describing visual context, objects, people, and scene layout.
+- **Landmark-grounded**: instructions explicitly anchored to salient environmental landmarks.
+
+The current Hugging Face release contains three splits:
+
+- `train.tar`: training split.
+- `val_seen.tar`: validation split from seen environments.
+- `val_unseen.tar`: validation split from unseen environments.
+
+Go Stanford, ReCon, SCAND, and HuRoN are used for training and in-domain evaluation, while TartanDrive is reserved for unseen-environment evaluation.
+
+To download and extract all released splits into `data/lcvn/` with a single command:
 
 ```bash
-
-mkdir -p data/
-unzip data_samples/data_samples.zip -d data/
+bash download_data.sh
 ```
 
-Each trajectory folder should contain frame images and a `traj_data.pkl`:
+After extraction, the expected directory structure is:
 
+```text
+data/
+└── lcvn/
+    ├── train/
+    │   ├── {trajectory_id}/
+    │   │   ├── 0.jpg
+    │   │   ├── 1.jpg
+    │   │   ├── ...
+    │   │   ├── n.jpg
+    │   │   └── traj_data.pkl
+    │   └── ...
+    ├── val_seen/
+    │   └── ...
+    └── val_unseen/
+        └── ...
 ```
-data/lcvn/
-├── {trajectory_id}/
-│   ├── 0.jpg
-│   ├── 1.jpg
-│   ├── ...
-│   └── traj_data.pkl
-└── ...
-```
+
+Each `{trajectory_id}/` folder contains a sequence of egocentric RGB frames (`0.jpg`, `1.jpg`, ..., `n.jpg`) and a `traj_data.pkl` file storing trajectory metadata such as navigation actions, pose-related information, and language instructions.
 
 ---
 
