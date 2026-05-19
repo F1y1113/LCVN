@@ -25,6 +25,9 @@
   <a href="https://github.com/F1y1113/LCVN" target="_blank">
     <img src="https://img.shields.io/badge/Project-LCVN-blue">
   </a>
+  <a href="https://huggingface.co/datasets/fly1113/LCVN" target="_blank">
+    <img src="https://img.shields.io/badge/Dataset-LCVN_Dataset-yellow?logo=huggingface&logoColor=white">
+  </a>
   <a href="https://github.com/F1y1113/LCVN" target="_blank">
     <img src="https://img.shields.io/badge/License-MIT-green">
   </a>
