@@ -145,7 +145,7 @@ If you do not have a wandb account or prefer to run without cloud logging, use o
 
 ### Data Processing
 
-Run the full pipeline script to process the raw dataset into training-ready format:
+Run the full pipeline script to preprocess each released split into training-ready format:
 
 ```bash
 cd lcvn-wm
@@ -154,14 +154,14 @@ bash build_lcvn_pipeline.sh
 
 This script prepares the dataset end-to-end in the following order:
 
-1. **Build metadata** from raw trajectory folders (instructions loaded directly from `traj_data.pkl`)
+1. **Build metadata** separately for `train`, `val_seen`, and `val_unseen`
 2. **Encode frames → latents** using `stabilityai/sd-vae-ft-ema` (initial encoding)
 3. **Build initial cache** from the SD-VAE latents
 4. **Train custom VAE** on this dataset
 5. **Re-encode frames** with the trained VAE
 6. **Rebuild final cache** using the new latents
 
-Each step can be skipped individually by setting the corresponding `RUN_STEPx=0` environment variable. The final dataset is placed under `lcvn-wm/data/lcvn/`.
+Each step can be skipped individually by setting the corresponding `RUN_STEPx=0` environment variable. The processed splits are kept separate under `lcvn-wm/data/lcvn/{training,validation_seen,validation_unseen}/`.
 
 
 ### Train
@@ -172,6 +172,7 @@ WANDB_MODE=online python -m main \
   dataset=lcvn \
   algorithm=ldit_video_social \
   experiment=video_generation \
+  dataset.split_name_map.validation=validation_seen \
   wandb.entity=<YOUR_WANDB_ENTITY> \
   +logger.wandb.log_model=False
 ```
@@ -184,22 +185,44 @@ load='"/path/to/checkpoint.ckpt"'
 
 > **Note:** The nested quotes are required by Hydra to parse paths containing `=`.
 
-The latest checkpoint is automatically copied to `outputs/social_dit_xl.ckpt` at the end of training.
+The latest checkpoint is automatically copied to `outputs/social_dit_xl.ckpt` at the end of training. During training, `training` is always read from `lcvn-wm/data/lcvn/training/`, while the validation loader can be switched between `validation_seen` and `validation_unseen` through `dataset.split_name_map.validation=...`.
 
-### Test (Autoregressive Inference)
+### Evaluation
+
+The current public LCVN release does not provide a separate `test` split. Use the validation task and explicitly choose which processed validation split to evaluate on.
+
+**Validation on seen environments**
 
 ```bash
 WANDB_MODE=online python -m main \
-  '+name=Inference_Final_Fix' \
+  '+name=LcvnWM_ValSeen' \
   dataset=lcvn \
   algorithm=ldit_video_social \
   experiment=video_generation \
-  experiment.tasks=[test] \
+  experiment.tasks=[validation] \
+  dataset.split_name_map.validation=validation_seen \
   experiment.ema.enable=False \
   wandb.entity=<YOUR_WANDB_ENTITY> \
   load="../outputs/social_dit_xl.ckpt" \
   +logger.wandb.log_model=False \
-  +trainer.limit_test_batches=4
+  experiment.validation.limit_batch=4
+```
+
+**Validation on unseen environments**
+
+```bash
+WANDB_MODE=online python -m main \
+  '+name=LcvnWM_ValUnseen' \
+  dataset=lcvn \
+  algorithm=ldit_video_social \
+  experiment=video_generation \
+  experiment.tasks=[validation] \
+  dataset.split_name_map.validation=validation_unseen \
+  experiment.ema.enable=False \
+  wandb.entity=<YOUR_WANDB_ENTITY> \
+  load="../outputs/social_dit_xl.ckpt" \
+  +logger.wandb.log_model=False \
+  experiment.validation.limit_batch=4
 ```
 
 ---
@@ -223,27 +246,57 @@ Before training, verify `config/train_dfot.yaml` has the correct checkpoint path
 **Default (4 GPUs):**
 
 ```bash
-./train_ac.sh datamodule.batch_size=64
+LCVN_VAL_SPLIT_NAME=validation_seen ./train_ac.sh datamodule.batch_size=64
 ```
 
 **Single GPU:**
 
 ```bash
-NPROC=1 ./train_ac.sh datamodule.batch_size=64
+LCVN_VAL_SPLIT_NAME=validation_seen NPROC=1 ./train_ac.sh datamodule.batch_size=64
 ```
 
-**Resume from checkpoint:**
+**Resume from checkpoint (4 GPUs):**
 
 ```bash
-./train_ac.sh datamodule.batch_size=64 ckpt_path=../outputs/ac.ckpt
+LCVN_VAL_SPLIT_NAME=validation_seen ./train_ac.sh datamodule.batch_size=64 \
+  ckpt_path=/path/to/model_weights/last.ckpt
 ```
 
-### Test
+**Resume from checkpoint (single GPU):**
+
+```bash
+LCVN_VAL_SPLIT_NAME=validation_seen NPROC=1 ./train_ac.sh datamodule.batch_size=64 \
+  ckpt_path=/path/to/model_weights/last.ckpt
+```
+
+AC training always reads training data from `lcvn-wm/data/lcvn/training/`. The validation side is switched by `LCVN_VAL_SPLIT_NAME`, so you can point it to either `validation_seen` or `validation_unseen` without touching the trainer logic. `ckpt_path=...` only controls which checkpoint to resume from; it is independent of the validation split choice.
+
+`train_ac.sh` defaults to 4 GPUs. Set `NPROC=1` to run the same entrypoint on a single GPU; the wrapper will also switch `trainer.devices` to `1` automatically unless you explicitly override it. Training checkpoints are written by Hydra under `lcvn-ac/logs/dfot_training/.../model_weights/`, and the latest checkpoint is typically `model_weights/last.ckpt`.
+
+### Evaluation
+
+The public release does not include a separate AC test split either, so evaluation should read from the processed validation split directly.
+
+**Validation on seen environments**
 
 ```bash
 python -m lcvn_ac.scripts.test_single_trajectory_real_dfot \
-  +checkpoint="../outputs/ac.ckpt" \
+  ckpt_path=/path/to/model_weights/last.ckpt \
+  +eval_loader=validation \
   datamodule.root_data_dir="${oc.env:PWD}/../lcvn-wm/data/lcvn" \
+  datamodule.val_split_name=validation_seen \
+  datamodule.batch_size=1 \
+  trainer.devices=1
+```
+
+**Validation on unseen environments**
+
+```bash
+python -m lcvn_ac.scripts.test_single_trajectory_real_dfot \
+  ckpt_path=/path/to/model_weights/last.ckpt \
+  +eval_loader=validation \
+  datamodule.root_data_dir="${oc.env:PWD}/../lcvn-wm/data/lcvn" \
+  datamodule.val_split_name=validation_unseen \
   datamodule.batch_size=1 \
   trainer.devices=1
 ```

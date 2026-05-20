@@ -135,7 +135,7 @@ class SocialAdvancedVideoDataset(BaseAdvancedVideoDataset):
         Supports both base format with 'video_paths'/'video_pts' and
         social format with columnar fields like 'video_path', 'num_frames', 'conditions'.
         """
-        metadata_path = self.metadata_dir / f"{self.split}.pt"
+        metadata_path = self.metadata_dir / f"{self.physical_split}.pt"
         metadata_dict = torch.load(metadata_path, weights_only=False)
         if "video_paths" in metadata_dict:
             # Base format: delegate to BaseVideoDataset behavior
@@ -183,7 +183,7 @@ class SocialAdvancedVideoDataset(BaseAdvancedVideoDataset):
         traj_id = video_metadata.get("trajectory_id", None)
         if scene is None or traj_id is None:
             raise ValueError("Missing 'scene' or 'trajectory_id' in metadata for latent path resolution")
-        return (self.save_dir / "latents" / self.split / f"{scene}_{traj_id}_{self.latent_suffix}.pt")
+        return (self.save_dir / "latents" / self.physical_split / f"{scene}_{traj_id}_{self.latent_suffix}.pt")
     '''
     def video_metadata_to_latent_path(self, video_metadata: Dict[str, Any]) -> Path:
         if isinstance(video_metadata, (str, Path)):
@@ -193,7 +193,7 @@ class SocialAdvancedVideoDataset(BaseAdvancedVideoDataset):
         traj_id = video_metadata.get("trajectory_id", None)
         if scene is None or traj_id is None:
             raise ValueError("Missing 'scene' or 'trajectory_id' in metadata for latent path resolution")
-        return (self.save_dir / "latents" / self.split / f"{scene}_{traj_id}_{self.latent_suffix}.pt")
+        return (self.save_dir / "latents" / self.physical_split / f"{scene}_{traj_id}_{self.latent_suffix}.pt")
 
     #def load_video(
     #    self,

@@ -184,7 +184,7 @@ def build_cache(dataset_root: Path, split: str, lang_dim: int, output_root: Path
 def main():
     parser = argparse.ArgumentParser(description="Build social cache from traj_data.pkl")
     parser.add_argument("--dataset_root", type=str, required=True, help="Root dir of social dataset")
-    parser.add_argument("--split", type=str, default="training", choices=["training", "validation"])
+    parser.add_argument("--split", type=str, default="training", help="Processed split name, e.g. training or validation_seen")
     parser.add_argument("--lang_dim", type=int, default=512)
     parser.add_argument("--output_root", type=str, default="data/social_cached")
     args = parser.parse_args()

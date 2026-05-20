@@ -50,20 +50,33 @@ def main(cfg: DictConfig) -> None:
     datamodule.prepare_data()
     datamodule.setup(stage="fit")
 
-    # Take one batch (language modality)
-    loaders = datamodule.train_dataloader()
-    assert isinstance(loaders, dict), "Expected dataloaders to be a dict"
+    eval_loader = str(getattr(cfg, "eval_loader", "training")).lower()
+    if eval_loader == "validation":
+        loaders = datamodule.val_dataloader()
+        batch_group = next(iter(loaders))
+        if isinstance(batch_group, tuple):
+            batch_group = batch_group[0]
+    elif eval_loader == "training":
+        loaders = datamodule.train_dataloader()
+        batch_group = loaders
+    else:
+        raise ValueError(f"Unsupported eval_loader={eval_loader}. Use training or validation.")
+
+    assert isinstance(batch_group, dict), "Expected dataloaders to be a dict"
     # Select a key that contains language (social config uses 'lang'/'vis')
     key = None
-    for k in loaders.keys():
+    for k in batch_group.keys():
         if "lang" in k:
             key = k
             break
     if key is None:
         # Fallback: choose any key
-        key = list(loaders.keys())[0]
-    loader = loaders[key]
-    batch = next(iter(loader))
+        key = list(batch_group.keys())[0]
+    if eval_loader == "validation":
+        batch = batch_group[key]
+    else:
+        loader = batch_group[key]
+        batch = next(iter(loader))
 
     # Use TrajectoryLogger to record data loading (invoke proper start method)
     traj_logger = TrajectoryLogger()

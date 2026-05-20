@@ -8,6 +8,8 @@ defaults:
 _target_: lcvn_ac.datasets.lcvn_data_module.LcvnDataModule
 _recursive_: false
 root_data_dir: ${oc.env:PWD}/lcvn-wm/data/lcvn
+train_split_name: training
+val_split_name: validation_seen
 action_space: 4
 action_max: [0.25, 0.25, 0.1, 0.27]
 action_min: [-0.25, -0.25, -0.1, -0.27]
