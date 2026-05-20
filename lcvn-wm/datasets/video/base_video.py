@@ -33,6 +33,12 @@ class BaseVideoDataset(torch.utils.data.Dataset, ABC):
     _ALL_SPLITS = ["training", "validation", "test"]
     metadata: Dict[str, Any]
 
+    def _resolve_split_name(self, split: str) -> str:
+        split_name_map = getattr(self.cfg, "split_name_map", None)
+        if split_name_map is None:
+            return split
+        return split_name_map.get(split, split)
+
     def __init__(
         self,
         cfg: DictConfig,
@@ -47,7 +53,8 @@ class BaseVideoDataset(torch.utils.data.Dataset, ABC):
         self.latent_dir = self.save_dir.with_name(
             f"{self.save_dir.name}_latent_{self.latent_resolution}{'_' + cfg.latent.suffix if cfg.latent.suffix else ''}"
         )
-        self.split_dir = self.save_dir / split
+        self.physical_split = self._resolve_split_name(split)
+        self.split_dir = self.save_dir / self.physical_split
         self.metadata_dir = self.save_dir / "metadata"
 
         # Download dataset if not exists
@@ -66,7 +73,7 @@ class BaseVideoDataset(torch.utils.data.Dataset, ABC):
         """
         Check if the dataset should be downloaded
         """
-        return not (self.save_dir / self.split).exists()
+        return not (self.save_dir / self.physical_split).exists()
 
     @abstractmethod
     def download_dataset(self) -> None:
@@ -88,7 +95,8 @@ class BaseVideoDataset(torch.utils.data.Dataset, ABC):
         }
         ```
         """
-        video_paths = sorted(list((self.save_dir / split).glob("**/*.mp4")), key=str)
+        physical_split = self._resolve_split_name(split)
+        video_paths = sorted(list((self.save_dir / physical_split).glob("**/*.mp4")), key=str)
         dl: torch.utils.data.DataLoader = torch.utils.data.DataLoader(
             _VideoTimestampsDataset(video_paths),
             batch_size=16,
@@ -115,7 +123,7 @@ class BaseVideoDataset(torch.utils.data.Dataset, ABC):
             "video_pts": video_pts,
             "video_fps": video_fps,
         }
-        torch.save(metadata, self.metadata_dir / f"{split}.pt")
+        torch.save(metadata, self.metadata_dir / f"{physical_split}.pt")
 
     def subsample(
         self,
@@ -189,7 +197,7 @@ class BaseVideoDataset(torch.utils.data.Dataset, ABC):
         Load metadata from metadata_dir
         """
         metadata = torch.load(
-            self.metadata_dir / f"{self.split}.pt", weights_only=False
+            self.metadata_dir / f"{self.physical_split}.pt", weights_only=False
         )
         return [
             {key: metadata[key][i] for key in metadata.keys()}
@@ -221,7 +229,8 @@ class BaseVideoDataset(torch.utils.data.Dataset, ABC):
         """
         Return list of latent paths for the given split
         """
-        return sorted(list((self.latent_dir / split).glob("**/*.pt")), key=str)
+        physical_split = self._resolve_split_name(split)
+        return sorted(list((self.latent_dir / physical_split).glob("**/*.pt")), key=str)
 
     def load_video(
         self,

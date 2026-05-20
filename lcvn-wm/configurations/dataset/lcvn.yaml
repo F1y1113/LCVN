@@ -31,3 +31,9 @@ subdataset_size: 8502  #
 # Dataloader settings
 num_workers: 4
 prefetch_factor: 2
+
+# Logical split name -> processed directory / metadata split name
+split_name_map:
+  training: training
+  validation: validation_seen
+  test: validation_seen

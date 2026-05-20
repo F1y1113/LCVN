@@ -127,6 +127,7 @@ def main():
                         help="Comma-separated list of dataset root directories (e.g. recon,go_stanford,sacson,scand)")
     parser.add_argument("--train_ratio", type=float, default=0.9)
     parser.add_argument("--val_ratio", type=float, default=0.1)
+    parser.add_argument("--output_split", type=str, default=None)
     parser.add_argument("--reorganize_latents_from_recon", action="store_true", default=False)
     parser.add_argument("--latents_root", type=str, default=None)
     parser.add_argument("--latents_recon_dir", type=str, default=None)
@@ -328,11 +329,6 @@ def main():
         if total == 0:
             print("No trajectories found in any dataset root")
             sys.exit(1)
-        random.seed(42)
-        random.shuffle(items)
-        n_train = int(total * args.train_ratio)
-        train_items = items[:n_train]
-        val_items = items[n_train:]
         def to_columnar(lst):
             return {
                 "video_path": [x["video_path"] for x in lst],
@@ -343,9 +339,24 @@ def main():
                 "trajectory_id": [x["trajectory_id"] for x in lst],
                 "conditions": [x["conditions"] for x in lst],
             }
-        torch.save(to_columnar(train_items), metadata_dir / "training.pt")
-        torch.save(to_columnar(val_items), metadata_dir / "validation.pt")
-        print(f"Built metadata at {metadata_dir} with counts: train={len(train_items)}, val={len(val_items)} (total={total})")
+        if args.output_split:
+            torch.save(to_columnar(items), metadata_dir / f"{args.output_split}.pt")
+            print(
+                f"Built metadata at {metadata_dir / f'{args.output_split}.pt'} "
+                f"with count={len(items)}"
+            )
+        else:
+            random.seed(42)
+            random.shuffle(items)
+            n_train = int(total * args.train_ratio)
+            train_items = items[:n_train]
+            val_items = items[n_train:]
+            torch.save(to_columnar(train_items), metadata_dir / "training.pt")
+            torch.save(to_columnar(val_items), metadata_dir / "validation.pt")
+            print(
+                f"Built metadata at {metadata_dir} with counts: "
+                f"train={len(train_items)}, val={len(val_items)} (total={total})"
+            )
         sys.exit(0)
     if args.reorganize_latents_from_recon:
         if args.metadata_dir is None or args.latents_root is None or args.latents_recon_dir is None:

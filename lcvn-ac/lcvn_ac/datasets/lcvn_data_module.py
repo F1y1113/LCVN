@@ -26,6 +26,8 @@ class LcvnDataModule(pl.LightningDataModule):
         datasets: DictConfig,
         training_repo_root: Optional[Path] = None,
         root_data_dir: str = "datasets/task_D_D",
+        train_split_name: str = "training",
+        val_split_name: str = "validation",
         transforms: DictConfig = DEFAULT_TRANSFORM,
         batch_sampler: DictConfig = None,
         shuffle_val: bool = False,
@@ -40,8 +42,10 @@ class LcvnDataModule(pl.LightningDataModule):
         if not root_data_path.is_absolute():
             assert training_repo_root is not None, "If root_data_path isn't absolute, please provide training_repo_root"
             root_data_path = training_repo_root / root_data_path
-        self.training_dir = root_data_path / "training"
-        self.val_dir = root_data_path / "validation"
+        self.train_split_name = train_split_name
+        self.val_split_name = val_split_name
+        self.training_dir = root_data_path / self.train_split_name
+        self.val_dir = root_data_path / self.val_split_name
         self.shuffle_val = shuffle_val
         self.modalities: List[str] = []
         self.transforms = transforms
@@ -272,4 +276,3 @@ class LcvnDataModule(pl.LightningDataModule):
         match = re.search(r'episode_(\d+)\.npz', filename)
         # Return the integer ID if found, otherwise None
         return int(match.group(1)) if match else None
-
