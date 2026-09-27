@@ -9,7 +9,7 @@
   Lingdong Kong<sup>2</sup>,
   Guangyu Chen<sup>1</sup>,
   Yetong Sha<sup>1</sup>,
-  Qiyu Hu<sup>1</sup>,
+  Qiyu Hu<sup>1</sup>, <br>
   Feng Liu<sup>3</sup>,
   Siyu Huang<sup>4</sup>,
   Qi Dai<sup>5</sup>,
@@ -17,7 +17,7 @@
   <br><br>
   <sup>1</sup>University of Washington,
   <sup>2</sup>National University of Singapore,
-  <sup>3</sup>Drexel University,
+  <sup>3</sup>Drexel University, <br>
   <sup>4</sup>Clemson University,
   <sup>5</sup>Microsoft Research
 </p>
