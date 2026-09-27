@@ -1,22 +1,26 @@
+<h1 align="center">
+  <strong>[NeurIPS 2026 Oral] 🔮 Language-Conditioned World Modeling<br>for Visual Navigation</strong>
+</h1>
+
 <p align="center">
-<h1 align="center"><strong>🔮 Language-Conditioned World Modeling<br>for Visual Navigation</strong></h1>
-  <p align="center"><span><a href=""></a></span>
-              <a>Yifei Dong<sup>1,*</sup>,</a>
-              <a>Fengyi Wu<sup>1,*</sup>,</a>
-              <a>Yilong Dai<sup>1,*</sup>,</a>
-              <a>Lingdong Kong<sup>2</sup>,</a>
-              <a>Guangyu Chen<sup>1</sup>,</a>
-              <a>Xu Zhu<sup>1</sup>,</a>
-              <a>Qiyu Hu<sup>1</sup>,</a>
-              <a>Tianyu Wang<sup>1</sup>,</a>
-              <a>Johnalbert Garnica<sup>1</sup>,</a>
-              <a>Feng Liu<sup>3</sup>,</a>
-              <a>Siyu Huang<sup>4</sup>,</a>
-              <a>Qi Dai<sup>5</sup>,</a>
-              <a>Zhi-Qi Cheng<sup>1,†</sup></a>
-    <br>
-    <sup>1</sup>UW, <sup>2</sup>NUS, <sup>3</sup>Clemson, <sup>4</sup>Drexel, <sup>5</sup>Microsoft<br>
-  </p>
+  Yifei Dong<sup>1,*</sup>,
+  Fengyi Wu<sup>1,*</sup>,
+  Yilong Dai<sup>1</sup>,
+  Lingdong Kong<sup>2</sup>,
+  Guangyu Chen<sup>1</sup>,
+  Yetong Sha<sup>1</sup>,
+  Qiyu Hu<sup>1</sup>,
+  Feng Liu<sup>3</sup>,
+  Siyu Huang<sup>4</sup>,
+  Qi Dai<sup>5</sup>,
+  Zhi-Qi Cheng<sup>1,†</sup>
+  <br><br>
+  <sup>1</sup>University of Washington,
+  <sup>2</sup>National University of Singapore,
+  <sup>3</sup>Drexel University,
+  <sup>4</sup>Clemson University,
+  <sup>5</sup>Microsoft Research
+</p>
 
 <p align="center">
   <a href="https://arxiv.org/abs/2603.26741" target="_blank">
