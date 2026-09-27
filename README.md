@@ -1,5 +1,5 @@
 <h1 align="center">
-  <strong>[NeurIPS 2026 Oral] 🔮 Language-Conditioned World Modeling<br>for Visual Navigation</strong>
+  <strong>[NeurIPS 2026 Oral] 🔮 Language-Conditioned World Modeling for Visual Navigation</strong>
 </h1>
 
 <p align="center">
